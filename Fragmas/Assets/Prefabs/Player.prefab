@@ -698,7 +698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muzzleFlash: {fileID: 198637027940971190}
   gunAudio: {fileID: 82216040948428450}
-  impactPrefab: {fileID: 1227920616117614}
+  impactPrefab: {fileID: 1293067822124232}
 --- !u!114 &114249070663303058
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4179,7 +4179,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 1936279126
+  randomSeed: 1196082581
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7262,7 +7262,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 2028406052
+  randomSeed: 1720026901
   InitialModule:
     serializedVersion: 3
     enabled: 1
