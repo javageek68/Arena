@@ -55,8 +55,11 @@ public class Player : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        anim.animator.SetFloat("Speed", Input.GetAxis("Vertical"));
-        anim.animator.SetFloat("Strafe", Input.GetAxis("Horizontal"));
+        if (anim != null)
+        {
+            anim.animator.SetFloat("Speed", Input.GetAxis("Vertical"));
+            anim.animator.SetFloat("Strafe", Input.GetAxis("Horizontal"));
+        }
     }
 
     void DisablePlayer()
@@ -77,24 +80,33 @@ public class Player : NetworkBehaviour
 
     void EnablePlayer()
     {
+        Debug.Log("entered EnablePlayer()");
         if (isLocalPlayer)
         {
+            Debug.Log("init canvas and turning main camera off");
             PlayerCanvas.canvas.Initialize();
             mainCamera.SetActive(false);
         }
 
+        Debug.Log("onToggleShared.Invoke(true);");
         onToggleShared.Invoke(true);
 
         if (isLocalPlayer)
+        {
+            Debug.Log("onToggleLocal.Invoke(true);");
             onToggleLocal.Invoke(true);
+        }
         else
+        {
+            Debug.Log("onToggleRemote.Invoke(true);");
             onToggleRemote.Invoke(true);
+        }
     }
 
     public void Die()
     {
         if (isLocalPlayer || playerControllerId == -1)
-            anim.SetTrigger("Died");
+            if (anim != null) anim.SetTrigger("Died");
 
         if (isLocalPlayer)
         {
@@ -110,7 +122,7 @@ public class Player : NetworkBehaviour
     void Respawn()
     {
         if (isLocalPlayer || playerControllerId == -1)
-            anim.SetTrigger("Restart");
+            if (anim != null) anim.SetTrigger("Restart");
 
         //only the local player should get the new spawn point.
         if (isLocalPlayer)
