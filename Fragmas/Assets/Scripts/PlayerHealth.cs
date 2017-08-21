@@ -6,12 +6,19 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField]
     int maxHealth = 3;
 
+    /// <summary>
+    /// SyncVar gets updated on the server and propegated to the clients.  When that happens, the 
+    /// hook method gets fired
+    /// </summary>
     [SyncVar(hook = "OnHealthChanged")]
     int health;
 
     Player player;
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     void Awake()
     {
         player = GetComponent<Player>();
@@ -23,6 +30,18 @@ public class PlayerHealth : NetworkBehaviour
     [ServerCallback]
     void OnEnable()
     {
+        //this issue here is that we still don't know if we are the server or not.
+        //we don't know that until the Start event.
+        health = maxHealth;
+    }
+
+    /// <summary>
+    /// ServerCallback means that this method only exists on the server
+    /// </summary>
+    [ServerCallback]
+    void Start()
+    {
+        //We have to call this again here to make the OnHealthChanged hook fire.
         health = maxHealth;
     }
 
@@ -67,6 +86,11 @@ public class PlayerHealth : NetworkBehaviour
             player.Die();
     }
 
+
+    /// <summary>
+    /// hook method for health
+    /// </summary>
+    /// <param name="value"></param>
     void OnHealthChanged(int value)
     {
         health = value;

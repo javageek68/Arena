@@ -140,13 +140,16 @@ public class Player : NetworkBehaviour
     {
         playerName = value;
         gameObject.name = playerName;
+        //Note passing True to GetComponentInChildren causes it to find 
+        //compenents even if they are disabled. 
         GetComponentInChildren<Text>(true).text = playerName;
     }
 
     void OnColorChanged(Color value)
     {
         playerColor = value;
-        GetComponentInChildren<RendererToggler>().ChangeColor(playerColor);
+        RendererToggler rt = GetComponentInChildren<RendererToggler>(true);
+        if (rt != null) rt.ChangeColor(playerColor);
     }
 
     [Server]
