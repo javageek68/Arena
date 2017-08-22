@@ -138,18 +138,39 @@ public class Player : NetworkBehaviour
 
     void OnNameChanged(string value)
     {
+        Debug.Log("OnNameChanged setting " + value);
         playerName = value;
         gameObject.name = playerName;
         //Note passing True to GetComponentInChildren causes it to find 
         //compenents even if they are disabled. 
-        GetComponentInChildren<Text>(true).text = playerName;
+        Text txt = GetComponentInChildren<Text>(true);
+        if (txt == null)
+        {
+            Debug.Log("txt == null");
+        }
+        else
+        {
+            txt.text = playerName;
+        }
+        
+        Debug.Log("leaving OnNameChanged");
     }
 
     void OnColorChanged(Color value)
     {
+        Debug.Log("OnColorChanged setting " + value.ToString());
         playerColor = value;
         RendererToggler rt = GetComponentInChildren<RendererToggler>(true);
-        if (rt != null) rt.ChangeColor(playerColor);
+        if (rt == null)
+        {
+            Debug.Log("rt == null");
+        }
+        else
+        {
+            rt.ChangeColor(playerColor);
+        }
+
+        Debug.Log("leaving OnColorChanged");
     }
 
     [Server]
