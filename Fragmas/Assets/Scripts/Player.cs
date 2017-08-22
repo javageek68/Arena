@@ -25,6 +25,8 @@ public class Player : NetworkBehaviour
 
     static List<Player> players = new List<Player>();
 
+    int intPlr = 0;
+
     GameObject mainCamera;
     NetworkAnimator anim;
 
@@ -34,6 +36,15 @@ public class Player : NetworkBehaviour
         mainCamera = Camera.main.gameObject;
 
         EnablePlayer();
+
+        //If we are on the client, then we need to call all SyncVar hooks on start.
+        //LobbyHook set all of the lobby variables when the level started.  Unfortunately, it does not call
+        //any of the hooks.  So, we have to manually call them the first time!
+        if (isClient)
+        {
+            OnNameChanged(this.playerName);
+            OnColorChanged(this.playerColor);
+        }
     }
 
     [ServerCallback]
@@ -52,8 +63,11 @@ public class Player : NetworkBehaviour
 
     void Update()
     {
+        //if (this.isServer) TestSync();
+
         if (!isLocalPlayer)
             return;
+
 
         if (anim != null)
         {
@@ -61,6 +75,23 @@ public class Player : NetworkBehaviour
             anim.animator.SetFloat("Strafe", Input.GetAxis("Horizontal"));
         }
     }
+
+
+
+    public void TestSync()
+    {
+        if (this.isServer)
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                string strName = string.Format("player {0}", intPlr);
+                Debug.Log(string.Format( "setting player {0} name to {1} ", i, strName));
+                players[i].playerName = strName;
+                intPlr++;
+            }
+        }
+    }
+
 
     void DisablePlayer()
     {
