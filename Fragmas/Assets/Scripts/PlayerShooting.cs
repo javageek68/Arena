@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerShooting : NetworkBehaviour
 {
@@ -43,7 +44,7 @@ public class PlayerShooting : NetworkBehaviour
 
         ellapsedTime += Time.deltaTime;
 
-        if (Input.GetButtonDown("Fire1") && ellapsedTime > shotCooldown)
+        if (CrossPlatformInputManager.GetButtonDown("Fire1") && ellapsedTime > shotCooldown)
         {
             ellapsedTime = 0f;
             CmdFireShot(firePosition.position, firePosition.forward);

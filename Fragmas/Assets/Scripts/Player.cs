@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -68,11 +69,10 @@ public class Player : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-
         if (anim != null)
         {
-            anim.animator.SetFloat("Speed", Input.GetAxis("Vertical"));
-            anim.animator.SetFloat("Strafe", Input.GetAxis("Horizontal"));
+            anim.animator.SetFloat("Speed", CrossPlatformInputManager.GetAxis("Vertical"));
+            anim.animator.SetFloat("Strafe", CrossPlatformInputManager.GetAxis("Horizontal"));
         }
     }
 
