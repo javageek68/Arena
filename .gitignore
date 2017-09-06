@@ -1,7 +1,10 @@
-Fragmas/Fragmas.sln
-Fragmas/Fragmas.csproj
-Fragmas/Fragmas.Plugins.csproj
-Fragmas/Fragmas.Editor.Plugins.csproj
-Fragmas/Library/
-Fragmas/Build/
-Fragmas/Temp/
+Unity/Fragmas/Fragmas.sln
+Unity/Fragmas/Fragmas.csproj
+Unity/Fragmas/Fragmas.Plugins.csproj
+Unity/Fragmas/Fragmas.Editor.Plugins.csproj
+Unity/Fragmas/Library/
+Unity/Fragmas/Build/
+Unity/Fragmas/Temp/
+Unity/NetDiscTest/Library/
+Unity/NetDiscTest/Build/
+Unity/NetDiscTest/.vs/
