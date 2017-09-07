@@ -7,45 +7,30 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using UnityEngine;
+
 
 
 class NetworkUtils
 {
-    public Dictionary<string, Host> hosts { get; set; }
+    private IPinger ipinger = null;
 
-    private void PingCompleted(object sender, PingCompletedEventArgs e)
+    public NetworkUtils(IPinger ipinger)
     {
-        string ip = (string)e.UserState;
-        if (e.Reply != null && e.Reply.Status == IPStatus.Success)
-        {
-            string hostname = GetHostName(ip);
-            string macaddres = GetMacAddress(ip);
-            string[] arr = new string[3];
-
-            if (!hosts.ContainsKey(ip))
-            {
-                hosts.Add(ip, new Host(ip, hostname, macaddres));
-            }
-
-        }
-        else
-        {
-            // MessageBox.Show(e.Reply.Status.ToString());
-        }
+        this.ipinger = ipinger;
     }
 
     public static string NetworkGateway()
     {
         string ip = null;
 
-        foreach (NetworkInterface f in NetworkInterface.GetAllNetworkInterfaces())
+        foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
         {
-            if (f.OperationalStatus == OperationalStatus.Up)
+            if (networkInterface.OperationalStatus == OperationalStatus.Up)
             {
-                foreach (GatewayIPAddressInformation d in f.GetIPProperties().GatewayAddresses)
+                foreach (GatewayIPAddressInformation ipInfo in networkInterface.GetIPProperties().GatewayAddresses)
                 {
-                    ip = d.Address.ToString();
+                    ip = ipInfo.Address.ToString();
                 }
             }
         }
@@ -55,20 +40,26 @@ class NetworkUtils
 
     public void Ping_all()
     {
-        hosts = new Dictionary<string, Host>();
-        string gate_ip = NetworkGateway();
-
-        //Extracting and pinging all other ip's.
-        string[] array = gate_ip.Split('.');
-
-        for (int i = 2; i <= 255; i++)
+        try
         {
+            string gate_ip = NetworkGateway();
 
-            string ping_var = array[0] + "." + array[1] + "." + array[2] + "." + i;
+            //Extracting and pinging all other ip's.
+            string[] array = gate_ip.Split('.');
 
-            //time in milliseconds           
-            Ping(ping_var, 4, 4000);
+            for (int i = 2; i <= 255; i++)
+            {
 
+                string ping_var = array[0] + "." + array[1] + "." + array[2] + "." + i;
+
+                Debug.Log("pinging " + ping_var);
+                //time in milliseconds           
+                Ping(ping_var, 4, 4000);
+
+            }
+        }
+        catch (Exception)
+        {
         }
 
     }
@@ -92,6 +83,33 @@ class NetworkUtils
                     // failed.  For this reason we are supressing errors.
                 }
             }).Start();
+        }
+    }
+
+
+    private void PingCompleted(object sender, PingCompletedEventArgs e)
+    {
+        try
+        {
+            string ip = (string)e.UserState;
+            if (e.Reply != null && e.Reply.Status == IPStatus.Success)
+            {
+                string hostname = GetHostName(ip);
+                string macaddres = GetMacAddress(ip);
+
+                Host host = new Host(ip, hostname, macaddres);
+                Debug.Log(host.ToString());
+                ipinger.PingComplete(host);
+            }
+            else
+            {
+                // MessageBox.Show(e.Reply.Status.ToString());
+            }
+        }
+        catch (Exception )
+        {
+
+            
         }
     }
 
@@ -134,7 +152,6 @@ class NetworkUtils
                         + substrings[8].Substring(0, 2);
             return macAddress;
         }
-
         else
         {
             return "OWN Machine";
